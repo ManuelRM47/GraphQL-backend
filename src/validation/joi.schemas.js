@@ -53,7 +53,9 @@ export default class Validation {
 
     static loginUserSchema = Joi.object({
         email: Joi.string().email(),
-        password: Joi.string().pattern(/^[a-zA-Z0-9]{8,30}$/),
+        password: Joi.string().pattern(/^[a-zA-Z0-9]{8,30}$/).message({
+            'string.pattern.base': 'Password must be minimum 8 characters long. Only letters and numbers are valid.',
+        }),
     })
 
     static deleteUserSchema = Joi.object({

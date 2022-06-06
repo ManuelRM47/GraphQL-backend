@@ -1,11 +1,18 @@
 
 type Query {
   info: String!
+  # user query methods
   getAllUsers: [User!]!
+  getUserByAccount(email: String!, password: String!): User
+  getUserByUsername(user_id: String!, username: String!): User
+  getUsersDatagrid(company: String!): [User!]
 }
 
 type Mutation {
+  # user crud operations
   postUser(username: String!, email: String!, password: String!, role: String!, company: String!): User!
+  updateUser(username: String!, email: String!, password: String!, role: String!, company: String!,user_id:String!):User!
+  deleteUser(user_id:String!, username: String!): User!
 }
 
 type User {
