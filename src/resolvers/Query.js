@@ -1,6 +1,7 @@
 import Joi from "joi";
 import Validation from "../validation/joi.schemas.js";
 
+//? Users API
 export async function getAllUsers(parent, args, context, info) {
     return await context.user.find();
 }
@@ -65,3 +66,20 @@ export async function getUsersDatagrid(parent, args, context, info) {
         return { error: e };
     }
 }
+
+//? Companies API
+export async function getAllCompanies(parent, args, context, info) {
+    return await context.company.find();
+}
+
+export async function getCompanyByName(parent, args, context, info) {
+    return await context.company.findOne({name: args.name});
+}
+
+//? Devices API
+export async function getAllDevices(parent, args, context, info) {
+    return await context.device.find();
+}
+
+//? Records API
+

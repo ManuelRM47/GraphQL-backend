@@ -31,7 +31,6 @@ export default class Validation {
         updatedAt: Joi.string().allow(''),
     })
 
-
     static updateUserSchema = Joi.object({
         //user_id: Joi.string().min(8).max(8).required(),
         username: Joi.string().allow('').messages({
@@ -53,13 +52,15 @@ export default class Validation {
 
     static loginUserSchema = Joi.object({
         email: Joi.string().email(),
-        password: Joi.string().pattern(/^[a-zA-Z0-9]{8,30}$/).message({
+        password: Joi.string().pattern(/^[a-zA-Z0-9]{8,30}$/).messages({
             'string.pattern.base': 'Password must be minimum 8 characters long. Only letters and numbers are valid.',
         }),
     })
 
     static deleteUserSchema = Joi.object({
-        user_id: Joi.string().pattern(/^U([0-9]{7})$/).required(),
+        user_id: Joi.string().pattern(/^U([0-9]{7})$/).required().messages({
+            'string.pattern.base': 'Valid ID must start with \'U\'',
+        }),
         username: Joi.string().required()
     })
 
@@ -76,16 +77,33 @@ export default class Validation {
         updatedAt: Joi.string().allow(''),
     })
 
+    static updateCompanySchema = Joi.object({
+        company_id: Joi.string().pattern(/^C([0-9]{7})$/).required().messages({
+            'string.pattern.base': 'Valid ID must start with \'C\'',
+        }),
+        name: Joi.string().required(),
+        location: Joi.array().ordered(
+            Joi.number().min(-90).max(90).required(),
+            Joi.number().min(-180).max(180).required()
+        ),
+        razon_social: Joi.string().allow(''),
+        deleted: Joi.boolean(),
+        createdAt: Joi.string().allow(''),
+        updatedAt: Joi.string().allow(''),
+    })
+
     static deleteCompanySchema = Joi.object({
         name: Joi.string().required(),
-        razon_social: Joi.string().allow('').required(),
-
+        company_id: Joi.string().pattern(/^C([0-9]{7})$/).required().messages({
+            'string.pattern.base': 'Valid ID must start with \'C\'',
+        }),
     })
 
     static deviceSchema = Joi.object({
-        //device_id: Joi.string().min(8).max(8).required(),
         description: Joi.string().allow(''),
-        company_id: Joi.string().pattern(/^C([0-9]{7})$/).required(),
+        company_id: Joi.string().pattern(/^C([0-9]{7})$/).required().messages({
+            'string.pattern.base': 'Valid ID must start with \'C\'',
+        }),
         alert: Joi.boolean().required(),
         alert_message: Joi.string().allow(''),
         max_value: Joi.string().alphanum().required(),
@@ -95,9 +113,30 @@ export default class Validation {
         updatedAt: Joi.string().allow(''),
     })
 
+    static updateDeviceSchema = Joi.object({
+        device_id: Joi.string().pattern(/^D([0-9]{7})$/).required().messages({
+            'string.pattern.base': 'Valid ID must start with \'D\'',
+        }),
+        description: Joi.string().allow(''),
+        company_id: Joi.string().pattern(/^C([0-9]{7})$/).required().messages({
+            'string.pattern.base': 'Valid ID must start with \'C\'',
+        }),
+        alert: Joi.boolean().required(),
+        alert_message: Joi.string().allow(''),
+        max_value: Joi.string().alphanum().required(),
+        min_value: Joi.string().alphanum().required(),
+        deleted: Joi.boolean(),
+        createdAt: Joi.string().allow(''),
+        updatedAt: Joi.string().allow(''),
+    })
+    
     static deleteDeviceSchema = Joi.object({
-        device_id: Joi.string().pattern(/^D([0-9]{7})$/).required(),
-        company_id: Joi.string().pattern(/^C([0-9]{7})$/).required(),
+        device_id: Joi.string().pattern(/^D([0-9]{7})$/).required().messages({
+            'string.pattern.base': 'Valid ID must start with \'D\'',
+        }),
+        company_id: Joi.string().pattern(/^C([0-9]{7})$/).required().messages({
+            'string.pattern.base': 'Valid ID must start with \'C\'',
+        }),
     })
 
     static recordSchema = Joi.object({
@@ -112,6 +151,8 @@ export default class Validation {
     static deleteRecordSchema = Joi.object({
         start_date: Joi.date().timestamp().required(),
         end_date: Joi.date().timestamp().required(),
-        device_id: Joi.string().pattern(/^D([0-9]{7})$/).required(),
+        device_id: Joi.string().pattern(/^D([0-9]{7})$/).required().messages({
+            'string.pattern.base': 'Valid ID must start with \'D\'',
+        }),
     })
 }

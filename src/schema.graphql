@@ -4,64 +4,84 @@ type Query {
   # user query methods
   getAllUsers: [User!]!
   getUserByAccount(email: String!, password: String!): User
-  getUserByUsername(user_id: String!, username: String!): User
+  getUserByUsername(user_id: String!, username: String!): User #Can be reduced with Account Query
   getUsersDatagrid(company: String!): [User!]
+  
+  # company query methods
+  getAllCompanies: [Company!]!
+  getCompanyByName (name: String!): Company!
+  # getUsersByCompany: [User!]! Already implemented in Company schema
+  # getDevicesByCompany: [Device]! Already implemented in Company schema
+
+  # device query methods
+  getAllDevices: [Device!]!
+  # getRecordsByDevice: [Record!]! Already implemented in Device schema
 }
 
 type Mutation {
-  # user crud operations
+  # user CRUD operations
   postUser(username: String!, email: String!, password: String!, role: String!, company: String!): User!
-  updateUser(username: String!, email: String!, password: String!, role: String!, company: String!,user_id:String!):User!
+  updateUser(username: String!, email: String!, password: String!, role: String!, company: String!,user_id:String!): User!
   deleteUser(user_id:String!, username: String!): User!
+
+  # company CRUD operations
+  postCompany(name: String!, location: [Float!]!, razon_social: String!): Company!
+  updateCompany(name: String!, location: [Float!]!, razon_social: String!, company_id: String!): Company!
+  deleteCompany(name: String!, company_id: String!): Company!
+
+  # device CRUD operations
+  postDevice(description: String!, company_id: String!, alert: Boolean!, alert_message: String!, max_value: String!, min_value: String!): Device!
+  updateDevice(device_id: String!, description: String!, company_id: String!, alert: Boolean!, alert_message: String!, max_value: String!, min_value: String!): Device!
+  deleteDevice(device_id: String!, company_id: String!): Device!
 }
 
 type User {
-  username: String!
-  email: String!
-  password: String!
-  role: String!
-  company: String!
-  deleted: Boolean!
-  createdAt: String!
-  updatedAt: String!
-  user_id: String!
-  company_obj: Company!
+  username: String
+  email: String
+  password: String
+  role: String
+  company: String
+  deleted: Boolean
+  createdAt: String
+  updatedAt: String
+  user_id: String
+  company_obj: Company
 }
 
 type Company {
-  name: String!
-  location: [Float!]!
-  razon_social: String!
-  deleted: Boolean!
-  company_id: String!
-  createdAt: String!
-  updatedAt: String!
-  users: [User!]!
-  devices: [Device!]!
+  name: String
+  location: [Float!]
+  razon_social: String
+  deleted: Boolean
+  company_id: String
+  createdAt: String
+  updatedAt: String
+  users(first: Int): [User!]
+  devices(first: Int): [Device!]
 }
 
 type Device {
-  description: String!
-  company_id: String!
-  alert: Boolean!
-  alert_message: String!
-  max_value: String!
-  min_value: String!
-  deleted: Boolean!
-  device_id: String!
-  createdAt: String!
-  updatedAt: String!
-  company: Company!
-  records: [Record!]!
+  description: String
+  company_id: String
+  alert: Boolean
+  alert_message: String
+  max_value: String
+  min_value: String
+  deleted: Boolean
+  device_id: String
+  createdAt: String
+  updatedAt: String
+  company: Company
+  records(first: Int, start_date: Int, end_date: Int): [Record!]
 }
 
 type Record {
-  time_stamp: String!
-  device_id: String!
-  value: Float!
-  deleted: Boolean!
-  record_id: String!
-  createdAt: String!
-  updatedAt: String!
-  device: Device!
+  time_stamp: String
+  device_id: String
+  value: Float
+  deleted: Boolean
+  record_id: String
+  createdAt: String
+  updatedAt: String
+  device: Device
 }
