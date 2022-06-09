@@ -94,6 +94,7 @@ export async function deleteUser(parent, args, context, info) {
     const usersResponse = await context.user.updateOne(
         { user_id: args.user_id, username: args.username, deleted: false },
         { $set: {
+            updatedAt: new Date(),
             deleted: true,
         }}
     )

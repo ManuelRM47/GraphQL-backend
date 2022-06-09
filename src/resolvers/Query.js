@@ -82,4 +82,6 @@ export async function getAllDevices(parent, args, context, info) {
 }
 
 //? Records API
-
+export async function getAllRecords(parent, args, context, info) {
+    return await context.record.find().sort({time_stamp: -1});
+}

@@ -1,3 +1,4 @@
+scalar Date 
 
 type Query {
   info: String!
@@ -16,6 +17,9 @@ type Query {
   # device query methods
   getAllDevices: [Device!]!
   # getRecordsByDevice: [Record!]! Already implemented in Device schema
+
+  # record query methods
+  getAllRecords: [Record!]! # This method might be unnecessary
 }
 
 type Mutation {
@@ -33,6 +37,10 @@ type Mutation {
   postDevice(description: String!, company_id: String!, alert: Boolean!, alert_message: String!, max_value: String!, min_value: String!): Device!
   updateDevice(device_id: String!, description: String!, company_id: String!, alert: Boolean!, alert_message: String!, max_value: String!, min_value: String!): Device!
   deleteDevice(device_id: String!, company_id: String!): Device!
+
+  # record CRUD operations
+  postRecord(device_id: String!, value: Int!): Record!
+  deleteRecords(start_date: Date!, end_date: Date!, device_id: String!): [Record!]!
 }
 
 type User {
@@ -42,8 +50,8 @@ type User {
   role: String
   company: String
   deleted: Boolean
-  createdAt: String
-  updatedAt: String
+  createdAt: Date
+  updatedAt: Date
   user_id: String
   company_obj: Company
 }
@@ -54,8 +62,8 @@ type Company {
   razon_social: String
   deleted: Boolean
   company_id: String
-  createdAt: String
-  updatedAt: String
+  createdAt: Date
+  updatedAt: Date
   users(first: Int): [User!]
   devices(first: Int): [Device!]
 }
@@ -69,19 +77,20 @@ type Device {
   min_value: String
   deleted: Boolean
   device_id: String
-  createdAt: String
-  updatedAt: String
+  createdAt: Date
+  updatedAt: Date
   company: Company
-  records(first: Int, start_date: Int, end_date: Int): [Record!]
+  records(first: Int, start_date: Date, end_date: Date): [Record!]
 }
 
 type Record {
-  time_stamp: String
+  time_stamp: Date
   device_id: String
   value: Float
   deleted: Boolean
   record_id: String
-  createdAt: String
-  updatedAt: String
+  createdAt: Date
+  updatedAt: Date
   device: Device
 }
+

@@ -9,8 +9,8 @@ const deviceSchema = mongoose.Schema({
     min_value: String,
     deleted: Boolean,
     device_id: String,
-    createdAt: String,
-    updatedAt: String,
+    createdAt: Date,
+    updatedAt: Date,
 }, { versionKey: false });
 
 const device = mongoose.model('devices', deviceSchema, 'devices');

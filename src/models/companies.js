@@ -6,8 +6,8 @@ const companySchema = mongoose.Schema({
     razon_social: String,
     deleted: Boolean,
     company_id: String,
-    createdAt: String,
-    updatedAt: String,
+    createdAt: Date,
+    updatedAt: Date,
 }, { versionKey: false });
 
 const company = mongoose.model('companies', companySchema, 'companies');

@@ -76,6 +76,7 @@ export async function deleteCompany(parent, args, context, info) {
         { name: args.name, company_id: args.company_id, deleted: false },
         {
             $set: {
+                updatedAt: new Date(),
                 deleted: true
             }
         }
@@ -105,7 +106,7 @@ async function getCompanyID(model) {
         )
         return testResponse
     } catch (e) {
-        console.error(`Unable to generate user ID - ${e}`);
+        console.error(`Unable to generate company ID - ${e}`);
         return { error: e };
     }
 }

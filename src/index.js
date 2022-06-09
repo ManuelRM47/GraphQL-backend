@@ -15,9 +15,9 @@ import * as Mutation from './resolvers/Mutation.js';
 import * as User from './resolvers/User.js';
 import * as Company from'./resolvers/Company.js';
 import * as Device from './resolvers/Device.js';
-import * as Record from'./resolvers/Record.js';
+import * as Record from './resolvers/Record.js';
+import {dateScalar} from './resolvers/Date.js';
 // import * as Subscription from'./resolvers/Subscription.js';
-// import * as Vote from'./resolvers/Vote.js';
 
 // const pubsub = new PubSub();
 const __filename = fileURLToPath(import.meta.url);
@@ -30,10 +30,7 @@ const resolvers = {
     Company,
     Device,
     Record,
-    // Subscription,
-    // User,
-    // Link,
-    // Vote
+    Date: dateScalar,
   }
 
 

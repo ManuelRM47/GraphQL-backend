@@ -71,6 +71,7 @@ export async function deleteDevice(parent, args, context, info) {
     const devicesResponse = await context.device.updateOne(
         { device_id: args.device_id, company_id: args.company_id, deleted: false },
         { $set:{
+            updatedAt: new Date(),
             deleted: true
         }}
     )
@@ -90,7 +91,7 @@ async function getDeviceID(model) {
         )
         return testResponse
     } catch (e) {
-        console.error(`Unable to generate user ID - ${e}`);
+        console.error(`Unable to generate device ID - ${e}`);
         return { error: e };
     }
 }
