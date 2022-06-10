@@ -2,6 +2,11 @@ export async function records(parent, args, context) {
     let pipeline = [];
 
     if (!!args.start_date && !!args.end_date) {
+        if(args.start_date.getTime() >= args.end_date.getTime())
+        {
+            throw new Error("End date cannot be older then start date");
+        }
+
         pipeline.push({
             $match: {
                 deleted: false,
@@ -12,7 +17,6 @@ export async function records(parent, args, context) {
                 } 
             },
         })
-        console.log('dates');
     } else {
         pipeline.push({
             $match: {
@@ -33,5 +37,6 @@ export async function records(parent, args, context) {
             time_stamp: -1,
         },
     })
+
     return await context.record.aggregate(pipeline);
 }

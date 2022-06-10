@@ -3,6 +3,7 @@ import { GraphQLScalarType, Kind } from "graphql";
 export const dateScalar = new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
+    // Backend to GraphQL
     serialize(value) {
         const date = new Date(value);
         let time = '';
@@ -17,16 +18,34 @@ export const dateScalar = new GraphQLScalarType({
         }
         return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()} ${time}`;
     },
+    // GraphQL Variable to Backend
     parseValue(value) {
-        return new Date(value);
+
+        // Valid INT range >= "2022-01-01T12:00:00.000+00:00" -> 1641038400000
+        if (typeof value === 'number' && parseInt(value,10) >= 1641038400000) {
+            return new Date(value);
+        }
+        // Date type getTime() NaN
+        if ( typeof value === 'string' && isNaN(value) && !!new Date(value).getTime()) {
+            return new Date(value);
+        }
+
+        throw new Error("Invalid Date type or timestamp given was too old");
     },
+    // GraphQL Literal to Backend
     parseLiteral(ast) {
-        if (ast.kind === Kind.INT) {
+
+        // Valid INT range >= "2022-01-01T12:00:00.000+00:00" -> 1641038400000
+        if (ast.kind === Kind.INT && parseInt(ast.value,10) >= 1641038400000) {
             return new Date(parseInt(ast.value,10));
         }
-        if (ast.kind === Kind.STRING) {
+        // Date type getTime() NaN
+        if (ast.kind === Kind.STRING && isNaN(ast.value) && !!new Date(ast.value).getTime()) {
             return new Date(ast.value);
         }
-        return null;
+
+        throw new Error("Invalid Date type or timestamp given was too old");
+
+        //return null;
     }
 });
