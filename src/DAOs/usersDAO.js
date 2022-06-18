@@ -1,5 +1,6 @@
 import Joi from "joi";
 import Validation from "../validation/joi.schemas.js";
+import { pubsub } from "../constants.js";
 
 //? Users API
 //Registers a new user to the database
@@ -29,6 +30,7 @@ export async function postUser(parent, args, context, info) {
     newUser.updatedAt = new Date();
     
     await context.user.create(newUser);
+    pubsub.publish('USER_POSTED', {userPosted: newUser});
 
     return newUser;
 }
@@ -73,7 +75,9 @@ export async function updateUser(parent, args, context, info) {
     )
 
     if (usersResponse.matchedCount > 0) {
-        return await context.user.findOne({ user_id: args.user_id });
+        const confirmedUser = await context.user.findOne({ user_id: args.user_id });
+        pubsub.publish('USER_UPDATED',{userUpdated: confirmedUser});
+        return confirmedUser;
     } else {
         throw new Error("User not found with user_id provided");
     }
@@ -100,6 +104,7 @@ export async function deleteUser(parent, args, context, info) {
     )
 
     if (usersResponse.matchedCount > 0) {
+        pubsub.publish('USER_DELETED', {userDeleted: deletedUser});
         return deletedUser;
     } else {
         throw new Error("User not found with username and user_id provided");

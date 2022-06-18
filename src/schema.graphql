@@ -43,6 +43,12 @@ type Mutation {
   deleteRecords(start_date: Date!, end_date: Date!, device_id: String!): [Record!]!
 }
 
+type Subscription {
+  userPosted: User!,
+  userUpdated: User!,
+  userDeleted: User!
+}
+
 type User {
   username: String
   email: String
