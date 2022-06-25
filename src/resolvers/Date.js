@@ -25,6 +25,7 @@ export const dateScalar = new GraphQLScalarType({
         if (typeof value === 'number' && parseInt(value,10) >= 1641038400000) {
             return new Date(value);
         }
+        
         // Date type getTime() NaN
         if ( typeof value === 'string' && isNaN(value) && !!new Date(value).getTime()) {
             return new Date(value);

@@ -16,6 +16,7 @@ type Query {
 
   # device query methods
   getAllDevices: [Device!]!
+  getRecordsByDevice (first: Int, start_date: Date!, end_date: Date!, device_id: String!): [Record!]!
   # getRecordsByDevice: [Record!]! Already implemented in Device schema
 
   # record query methods
