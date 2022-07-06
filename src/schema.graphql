@@ -1,4 +1,4 @@
-scalar Date 
+scalar Date
 
 type Query {
   info: String!
@@ -50,53 +50,54 @@ type Subscription {
 }
 
 type User {
-  username: String
-  email: String
-  password: String
-  role: String
-  company: String
-  deleted: Boolean
-  createdAt: Date
-  updatedAt: Date
-  user_id: String
-  company_obj: Company
+  username: String!
+  email: String!
+  password: String!
+  role: String!
+  company: String!
+  deleted: Boolean!
+  createdAt: Date!
+  updatedAt: Date!
+  user_id: String!
+  company_obj: Company!
 }
 
 type Company {
-  name: String
-  location: [Float!]
-  razon_social: String
-  deleted: Boolean
-  company_id: String
-  createdAt: Date
-  updatedAt: Date
-  users(first: Int): [User!]
-  devices(first: Int): [Device!]
+  name: String!
+  location: [Float!]!
+  razon_social: String!
+  deleted: Boolean!
+  company_id: String!
+  createdAt: Date!
+  updatedAt: Date!
+  users(first: Int): [User!]!
+  devices(first: Int): [Device!]!
 }
 
 type Device {
-  description: String
-  company_id: String
-  alert: Boolean
-  alert_message: String
-  max_value: String
-  min_value: String
-  deleted: Boolean
-  device_id: String
-  createdAt: Date
-  updatedAt: Date
-  company: Company
+  description: String!
+  company_id: String!
+  alert: Boolean!
+  alert_message: String!
+  max_value: String!
+  min_value: String!
+  deleted: Boolean!
+  device_id: String!
+  createdAt: Date!
+  updatedAt: Date!
+  company: Company!
   records(first: Int, start_date: Date, end_date: Date): [Record!]
 }
 
 type Record {
-  time_stamp: Date
-  device_id: String
-  value: Float
-  deleted: Boolean
-  record_id: String
-  createdAt: Date
-  updatedAt: Date
-  device: Device
+  time_stamp: Date!
+  ISO_time_stamp: String!
+  device_id: String!
+  value: Float!
+  deleted: Boolean!
+  record_id: String!
+  createdAt: Date!
+  updatedAt: Date!
+  device: Device!
 }
 

@@ -5,6 +5,7 @@ import Validation from '../validation/joi.schemas.js';
 export async function postRecord(parent, args, context, info) {
     const newRecord = {
         time_stamp: new Date(),
+        ISO_time_stamp: new Date().toISOString(),
         device_id: args.device_id,
         value: args.value,
         deleted: false
