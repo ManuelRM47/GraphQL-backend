@@ -18,12 +18,15 @@ import record from './models/records.js';
 import Validation from "./validation/joi.schemas.js";
 import * as Query from './resolvers/Query.js';
 import * as Mutation from './resolvers/Mutation.js';
+import * as Subscription from'./resolvers/Subscription.js';
 import * as User from './resolvers/User.js';
 import * as Company from'./resolvers/Company.js';
 import * as Device from './resolvers/Device.js';
 import * as Record from './resolvers/Record.js';
-import { dateScalar } from './resolvers/Date.js';
-import * as Subscription from'./resolvers/Subscription.js';
+import { DateType } from './resolvers/Date.js';
+import { CursorType } from './resolvers/Cursor.js';
+import { paginationResolvers } from '@limit0/mongoose-graphql-pagination';
+
 
 const resolvers = {
   Query,
@@ -33,7 +36,9 @@ const resolvers = {
   Company,
   Device,
   Record,
-  Date: dateScalar,
+  Date: DateType,
+  Cursor: CursorType,
+  RecordConnection: paginationResolvers.connection,
 }
 
 const __filename = fileURLToPath(import.meta.url);

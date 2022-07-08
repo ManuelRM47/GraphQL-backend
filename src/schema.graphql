@@ -1,4 +1,5 @@
 scalar Date
+scalar Cursor
 
 type Query {
   info: String!
@@ -19,7 +20,7 @@ type Query {
 
   # record query methods
   getAllRecords: [Record!]! # This method might be unnecessary
-  getRecordsByDevice (first: Int, start_date: Date!, end_date: Date!, device_id: String!): [Record!]!
+  getRecordsByDevice (pagination: PaginationInput = {}, sort: RecordSortInput = {}, start_date: Date!, end_date: Date!, device_id: String!): RecordConnection!
 }
 
 type Mutation {
@@ -101,3 +102,34 @@ type Record {
   device: Device!
 }
 
+type RecordConnection {
+  totalCount: Int!
+  edges: [RecordEdge]!
+  pageInfo: PageInfo!
+}
+
+type RecordEdge {
+  node: Record!
+  cursor: Cursor!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: Cursor
+}
+
+input PaginationInput {
+  first: Int! = 25
+  after: Cursor
+}
+
+input RecordSortInput {
+  field: RecordSortField! = time_stamp
+  order: Int! = -1
+}
+
+enum RecordSortField {
+  time_stamp
+  createdAt
+  updatedAt
+}

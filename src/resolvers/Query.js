@@ -1,5 +1,6 @@
 import Joi from "joi";
 import Validation from "../validation/joi.schemas.js";
+import { Pagination } from '@limit0/mongoose-graphql-pagination';
 
 //? Users API
 export async function getAllUsers(parent, args, context, info) {
@@ -77,7 +78,8 @@ export async function getCompanyByName(parent, args, context, info) {
 }
 
 export async function getRecordsByDevice(parent, args, context, info) {
-    let pipeline = [];
+
+    let query = {};
 
     if (!!args.start_date && !!args.end_date) {
         if(args.start_date.getTime() >= args.end_date.getTime())
@@ -85,38 +87,24 @@ export async function getRecordsByDevice(parent, args, context, info) {
             throw new Error("End date cannot be older then start date");
         }
 
-        pipeline.push({
-            $match: {
-                deleted: false,
-                device_id: args.device_id,
-                time_stamp: {
-                    $gte: args.start_date,
-                    $lte: args.end_date
-                } 
+        query = {
+            deleted: false,
+            device_id: args.device_id,
+            time_stamp: {
+                $gte: args.start_date,
+                $lte: args.end_date 
             },
-        })
+        }
+        
     } else {
-        pipeline.push({
-            $match: {
-                deleted: false,
-                device_id: args.device_id,
-            },
-        })
+        query = {
+            deleted: false,
+            device_id: args.device_id,
+        }
     }
 
-    if (!!args.first) {
-        pipeline.push({
-            $limit: args.first
-        })
-    }
-
-    pipeline.push({
-        $sort: {
-            time_stamp: -1,
-        },
-    })
-
-    return await context.record.aggregate(pipeline);
+    return new Pagination(context.record, { criteria: query, pagination: args.pagination, sort: args.sort,});
+    //return await context.record.aggregate(pipeline);
 }
 
 //? Devices API
