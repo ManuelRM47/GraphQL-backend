@@ -1,6 +1,8 @@
 import Joi from "joi";
 import Validation from "../validation/joi.schemas.js";
 import { pubsub } from "../constants.js";
+import moment from 'moment-timezone';
+
 
 //? Users API
 //Registers a new user to the database
@@ -26,8 +28,8 @@ export async function postUser(parent, args, context, info) {
     Joi.assert(newUser,Validation.userSchema);
     const userID = await getUserID(context.generate);
     newUser.user_id = `U${userID.count}`;
-    newUser.createdAt = new Date();
-    newUser.updatedAt = new Date();
+    newUser.createdAt = moment().toDate();;
+    newUser.updatedAt = moment().toDate();;
     
     await context.user.create(newUser);
     pubsub.publish('USER_POSTED', {userPosted: newUser});
@@ -56,7 +58,7 @@ export async function updateUser(parent, args, context, info) {
 
     Joi.assert(updatedUser, Validation.updateUserSchema);
     updatedUser.user_id = args.user_id;
-    updatedUser.updatedAt = new Date();
+    updatedUser.updatedAt = moment().toDate();;
 
     let userNewValues = {};
     if (updatedUser.username) userNewValues.username = updatedUser.username;
@@ -98,7 +100,7 @@ export async function deleteUser(parent, args, context, info) {
     const usersResponse = await context.user.updateOne(
         { user_id: args.user_id, username: args.username, deleted: false },
         { $set: {
-            updatedAt: new Date(),
+            updatedAt: moment().toDate(),
             deleted: true,
         }}
     )

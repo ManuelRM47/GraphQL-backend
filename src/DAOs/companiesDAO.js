@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import Validation from '../validation/joi.schemas.js';
+import moment from 'moment-timezone';
 
 //? Companies API
 export async function postCompany(parent, args, context, info) {
@@ -19,8 +20,8 @@ export async function postCompany(parent, args, context, info) {
     const CompanyID = await getCompanyID(context.generate);
 
     newCompany.company_id =`C${CompanyID.count}`;
-    newCompany.createdAt = new Date();
-    newCompany.updatedAt = new Date();
+    newCompany.createdAt = moment().toDate();;
+    newCompany.updatedAt = moment().toDate();;
 
     await context.company.create(newCompany);
 
@@ -41,7 +42,7 @@ export async function updateCompany(parent, args, context, info) {
     }
     
     Joi.assert(updatedCompany, Validation.updateCompanySchema);
-    updatedCompany.updatedAt = new Date();
+    updatedCompany.updatedAt = moment().toDate();
 
     const companiesResponse = await context.company.updateOne(
         { company_id: updatedCompany.company_id, name: updatedCompany.name, deleted: false },
@@ -76,7 +77,7 @@ export async function deleteCompany(parent, args, context, info) {
         { name: args.name, company_id: args.company_id, deleted: false },
         {
             $set: {
-                updatedAt: new Date(),
+                updatedAt: moment().toDate(),
                 deleted: true
             }
         }

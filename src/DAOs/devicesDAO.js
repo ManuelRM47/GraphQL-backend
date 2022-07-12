@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import Validation from '../validation/joi.schemas.js';
+import moment from 'moment-timezone';
 
 //? Devices API
 export async function postDevice(parent, args, context, info) {
@@ -17,8 +18,8 @@ export async function postDevice(parent, args, context, info) {
     const DeviceID = await getDeviceID(context.generate);
 
     newDevice.device_id = `D${DeviceID.count}`;
-    newDevice.createdAt = new Date();
-    newDevice.updatedAt = new Date();
+    newDevice.createdAt = moment().toDate();;
+    newDevice.updatedAt = moment().toDate();;
 
     await context.device.create(newDevice);
 
@@ -37,7 +38,7 @@ export async function updateDevice(parent, args, context, info) {
     }
 
     Joi.assert(updatedDevice, Validation.updateDeviceSchema);
-    updatedDevice.updatedAt = new Date();
+    updatedDevice.updatedAt = moment().toDate();;
 
     const devicesResponse = await context.device.updateOne(
         { device_id: args.device_id, company_id: args.company_id, deleted: false },
@@ -71,7 +72,7 @@ export async function deleteDevice(parent, args, context, info) {
     const devicesResponse = await context.device.updateOne(
         { device_id: args.device_id, company_id: args.company_id, deleted: false },
         { $set:{
-            updatedAt: new Date(),
+            updatedAt: moment().toDate(),
             deleted: true
         }}
     )

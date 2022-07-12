@@ -1,6 +1,7 @@
 import Joi from "joi";
 import Validation from "../validation/joi.schemas.js";
 import { Pagination } from '@limit0/mongoose-graphql-pagination';
+import moment from 'moment-timezone';
 
 //? Users API
 export async function getAllUsers(parent, args, context, info) {
@@ -80,9 +81,12 @@ export async function getCompanyByName(parent, args, context, info) {
 export async function getRecordsByDevice(parent, args, context, info) {
 
     let query = {};
+    let startDate = moment(args.start_date);
+    let endDate = moment(args.end_date);
 
-    if (!!args.start_date && !!args.end_date) {
-        if(args.start_date.getTime() >= args.end_date.getTime())
+
+    if (!!startDate && !!endDate) {
+        if(startDate.isSameOrAfter(endDate))
         {
             throw new Error("End date cannot be older then start date");
         }
@@ -91,9 +95,9 @@ export async function getRecordsByDevice(parent, args, context, info) {
             deleted: false,
             device_id: args.device_id,
             time_stamp: {
-                $gte: args.start_date,
-                $lte: args.end_date 
-            },
+                $gte: startDate.toDate(),
+                $lte: endDate.toDate()
+            } 
         }
         
     } else {
@@ -104,7 +108,53 @@ export async function getRecordsByDevice(parent, args, context, info) {
     }
 
     return new Pagination(context.record, { criteria: query, pagination: args.pagination, sort: args.sort,});
-    //return await context.record.aggregate(pipeline);
+}
+
+export async function getRecordsForGraph(parent, args, context, info) {
+    
+    let pipeline = [];
+    let startDate = moment(args.start_date);
+    let endDate = moment(args.end_date);
+
+    if (!!startDate && !!endDate) {
+        if(startDate.isSameOrAfter(endDate))
+        {
+            throw new Error("End date cannot be older then start date");
+        }
+
+        pipeline.push({
+            $match: {
+                deleted: false,
+                device_id: args.device_id,
+                time_stamp: {
+                    $gte: startDate.toDate(),
+                    $lte: endDate.toDate() 
+                } 
+            }
+        })
+
+    } else {
+        pipeline.push({
+            $match: {
+                deleted: false,
+                device_id: args.device_id,
+            },
+        })
+    }
+
+    if (!!args.first) {
+        pipeline.push({
+            $limit: args.first
+        })
+    }
+
+    pipeline.push({
+        $sort: {
+            time_stamp: 1,
+        },
+    })
+
+    return await context.record.aggregate(pipeline);
 }
 
 //? Devices API

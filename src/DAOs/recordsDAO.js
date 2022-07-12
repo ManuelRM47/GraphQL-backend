@@ -1,11 +1,12 @@
 import Joi from 'joi';
 import Validation from '../validation/joi.schemas.js';
+import moment from 'moment-timezone';
 
 //? Records API
 export async function postRecord(parent, args, context, info) {
     const newRecord = {
-        time_stamp: new Date(),
-        ISO_time_stamp: new Date().toISOString(),
+        time_stamp: moment().toDate(),
+        ISO_time_stamp: moment().format(),
         device_id: args.device_id,
         value: args.value,
         deleted: false
@@ -15,8 +16,8 @@ export async function postRecord(parent, args, context, info) {
     const RecordID = await getRecordID(context.generate);
 
     newRecord.record_id = `R${RecordID.count}`;
-    newRecord.createdAt = new Date();
-    newRecord.updatedAt = new Date();
+    newRecord.createdAt = moment().toDate();
+    newRecord.updatedAt = moment().toDate();
 
     await context.record.create(newRecord);
 
@@ -25,8 +26,8 @@ export async function postRecord(parent, args, context, info) {
 
 export async function deleteRecords(parent, args, context, info) {
     const deletionLapse = {
-        start_date: new Date(args.start_date),
-        end_date: new Date(args.end_date),
+        start_date: moment(args.start_date).toDate(),
+        end_date: moment(args.end_date).toDate(),
         device_id: args.device_id,
     }
     
@@ -36,7 +37,7 @@ export async function deleteRecords(parent, args, context, info) {
     const recordsResponse = await context.record.updateMany(
         { device_id: args.device_id, time_stamp: { $gte: args.start_date, $lte: args.end_date}, deleted: false },
         { $set:{
-            updatedAt: new Date(),
+            updatedAt: moment().toDate(),
             deleted: true
         }}
     )

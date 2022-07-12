@@ -21,6 +21,8 @@ type Query {
   # record query methods
   getAllRecords: [Record!]! # This method might be unnecessary
   getRecordsByDevice (pagination: PaginationInput = {}, sort: RecordSortInput = {}, start_date: Date!, end_date: Date!, device_id: String!): RecordConnection!
+  getRecordsForGraph (first: Int, start_date: Date!, end_date: Date!, device_id: String!): [Record!]!
+  
 }
 
 type Mutation {
