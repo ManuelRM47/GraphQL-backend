@@ -144,7 +144,7 @@ export async function getRecordsForGraph(parent, args, context, info) {
 
     if (!!args.first) {
         pipeline.push({
-            $limit: args.first
+            $sample: {size: args.first}
         })
     }
 
